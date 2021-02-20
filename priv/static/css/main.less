@@ -1,0 +1,14 @@
+@import (reference) "theme";
+
+/* Общие классы */
+*, *::before, *::after {box-sizing: border-box;}
+img {border: 0 none; height: auto; max-width: 100%; vertical-align: middle;}
+ul {list-style: outside none none; margin: 0; padding: 0;}
+
+/* Подгонка под старые браузеры (делаем HTML5 элементы блочными) */
+article, aside, details, figcaption, figure, footer, header, main, menu, nav, section, summary {display: block;}
+
+html, body {width: 100%; margin: 0; padding: 0;}
+body {color: #bbb; background: @bc-page; font-size: @ts-normal; font-family: @fontFamily;}
+a {color: #00BCD4;}
+p {margin: 14px 0;}

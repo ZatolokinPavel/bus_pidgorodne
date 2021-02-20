@@ -17,7 +17,7 @@ cowboy_dispatch() -> [
         {"/service-worker.js",      cowboy_static,      {priv_file, bus_pidgorodne, "static/js/service-worker.js"}},
         {"/pwa/[...]",              cowboy_static,      {priv_dir,  bus_pidgorodne, "static/pwa"}},
         {"/img/[...]",              cowboy_static,      {priv_dir,  bus_pidgorodne, "static/img"}},
-        {"/css/[...]",              cowboy_static,      {priv_dir,  bus_pidgorodne, "static/css"}},
+        {"/css/index.css",          cowboy_static,      {priv_file, bus_pidgorodne, "static/css/index.css"}},
         {"/js/[...]",               cowboy_static,      {priv_dir,  bus_pidgorodne, "static/js"}},
         {'_',                       cowboy_static,      {priv_file, bus_pidgorodne, "static/404.html"}}
     ]} ].
