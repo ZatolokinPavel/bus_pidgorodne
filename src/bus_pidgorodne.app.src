@@ -1,0 +1,14 @@
+{application, bus_pidgorodne, [
+    {description, "An OTP application"},
+    {vsn, "1.0.0"},
+    {registered, []},
+    {mod, {bus_pidgorodne_app, []}},
+    {applications, [
+        kernel,
+        stdlib,
+        cowboy
+    ]},
+    {env, []},
+    {modules, []},
+    {links, []}
+]}.
