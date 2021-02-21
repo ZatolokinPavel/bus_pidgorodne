@@ -72,8 +72,13 @@ const Schedule = function () {
         while (table.tBodies[0].firstChild) table.tBodies[0].removeChild(table.tBodies[0].firstChild);  // очищаем таблицу
         let tr, td;
         for (let i=0; i < timetable['timetable'].length; i++) {
-            const item = timetable['timetable'][i];
-            const number = item['number'];
+            const number = timetable['timetable'][i]['number'];
+            const flight = timetable['timetable'][i]['flight'];
+            if (!table.tHead.rows[0].cells[flight]) {
+                const th = document.createElement('th')
+                th.append(flight);
+                table.tHead.rows[0].append(th);
+            }
             tr = table.tBodies[0].rows[number-1] || table.tBodies[0].insertRow();
             if (!tr.cells.length) {
                 td = tr.insertCell();
@@ -81,7 +86,7 @@ const Schedule = function () {
                 td.append(parseInt(number).toString());
             }
             td = tr.insertCell();
-            td.append(item.time);
+            td.append(timetable['timetable'][i].time);
         }
     };
 

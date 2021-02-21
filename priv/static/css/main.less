@@ -44,12 +44,13 @@ p {margin: 14px 0;}
     .schedule-header {color: @tc-secondary; font-size: @ts-large; line-height: @tl-large;}
 }
 
-.timetable-card {margin-top: @gutter*3;}
+.timetable-card {display: none; margin-top: @gutter*3;}
 .timetable-header {margin-bottom: @gutter;}
 table.timetable {
     border-collapse: collapse; text-align: center; font-size: @ts-small; line-height: @tl-small; color: @tc-muted;
     th, td {margin: 0; padding: 2px 3px; border: 1px solid @tc-divider; cursor: default;}
-    th {font-size: @ts-x-small; line-height: @tl-x-small; color: @tc-hint;}
+    th {font-size: @ts-x-small; line-height: @tl-x-small; font-weight: @tw-normal; color: @tc-hint;}
+    th:not(:empty)::after {content: ' рейс'; font-size: @ts-xx-small; line-height: @tl-xx-small;}
     td.timetable-number {text-align: right; font-size: @ts-x-small; line-height: @tl-x-small; color: @tc-hint;}
     td.timetable-number::after {content: ' график'; font-size: @ts-xx-small; line-height: @tl-xx-small;}
 }
