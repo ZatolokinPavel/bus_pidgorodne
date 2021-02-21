@@ -7,7 +7,8 @@ const Schedule = function () {
 
     let schedule = null,
         selectedBus = null;
-    const busList = document.getElementById('bus_list');
+    const busList = document.getElementById('bus_list'),
+        schedule_header = document.getElementById('schedule_header');
 
     const init = function () {
         loadData();
@@ -56,6 +57,7 @@ const Schedule = function () {
         document.getElementById(selectedBus)?.classList.remove('selected');
         document.getElementById(bus).classList.add('selected');
         selectedBus = bus;
+        schedule_header.textContent = 'Маршрут ' + selectedBus;
     };
 
     init();
