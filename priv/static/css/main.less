@@ -9,6 +9,33 @@ ul {list-style: outside none none; margin: 0; padding: 0;}
 article, aside, details, figcaption, figure, footer, header, main, menu, nav, section, summary {display: block;}
 
 html, body {width: 100%; margin: 0; padding: 0;}
-body {color: #bbb; background: @bc-page; font-size: @ts-normal; font-family: @fontFamily;}
+body {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between;
+    color: @tc-primary; background: @bc-page; font-size: @ts-normal; font-family: @fontFamily;
+}
+main {flex-grow: 1;}
 a {color: #00BCD4;}
 p {margin: 14px 0;}
+
+.page-header {padding: @gutter*2; background: @bc-foreground; font-size: @ts-large; line-height: @tl-large;}
+.page-footer {padding: @gutter*2; background: @bc-foreground;}
+
+.bus-list {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin: @gutter*3 0;
+    overflow-x: auto;
+    &::after {content: ''; display: block; flex-shrink: 0; width: @gutter; height: 1px;}
+
+    .bus {
+        flex-shrink: 0; width: @gutter*27; margin-left: @gutter; padding: @gutter*2; background: @bc-foreground; border-radius: 3px;
+        display: flex; justify-content: flex-start; align-items: center;
+        &-number {margin-right: @gutter*2; text-align: center; font-size: @ts-xx-large; line-height: @tl-xx-large;}
+        &-from, &-via, &-to {font-size: @ts-small; line-height: @tl-small; color: @tc-secondary;}
+    }
+}
+
+.schedule {
+    margin: @gutter*3 0; padding: @gutter*2; background: @bc-background;
+}
