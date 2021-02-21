@@ -30,7 +30,10 @@ p {margin: 14px 0;}
 
     .bus {
         flex-shrink: 0; width: @gutter*27; margin-left: @gutter; padding: @gutter*2; background: @bc-foreground; border-radius: 3px;
-        display: flex; justify-content: flex-start; align-items: center;
+        display: flex; justify-content: flex-start; align-items: center; cursor: pointer; border: 1px solid transparent;
+        &:hover {background: @bc-action-hover;}
+        &:active {background: @bc-action-active;}
+        &.selected {background: @bc-action; border: 1px solid @tc-secondary; cursor: default;}
         &-number {margin-right: @gutter*2; text-align: center; font-size: @ts-xx-large; line-height: @tl-xx-large;}
         &-from, &-via, &-to {font-size: @ts-small; line-height: @tl-small; color: @tc-secondary;}
     }

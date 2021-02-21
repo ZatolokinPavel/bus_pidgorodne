@@ -5,7 +5,8 @@
 
 const Schedule = function () {
 
-    let schedule = null;
+    let schedule = null,
+        selectedBus = null;
     const busList = document.getElementById('bus_list');
 
     const init = function () {
@@ -34,6 +35,7 @@ const Schedule = function () {
             const via = document.createElement('div');
             const to = document.createElement('div');
             bus.id = buses[i]['bus'];
+            bus.onclick = () => selectBus(buses[i]['bus']);
             number.className = 'bus-number';
             stations.className = 'bus-stations';
             from.className = 'bus-from';
@@ -48,6 +50,12 @@ const Schedule = function () {
             bus.append(number, stations);
             busList.append(bus);
         }
+    };
+
+    const selectBus = function (bus) {
+        document.getElementById(selectedBus)?.classList.remove('selected');
+        document.getElementById(bus).classList.add('selected');
+        selectedBus = bus;
     };
 
     init();
