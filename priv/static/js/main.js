@@ -5,7 +5,7 @@
 
 const Schedule = function () {
 
-    let schedule = null,
+    let scheduleData = null,
         selectedBus = null;
     const busList = document.getElementById('bus_list'),
         schedule_header = document.getElementById('schedule_header');
@@ -20,14 +20,14 @@ const Schedule = function () {
             .then(response => response.json())
             .then(json => !json.error ? Promise.resolve(json) : Promise.reject(json.reason))
             .then(json => {
-                schedule = json;
+                scheduleData = json;
                 drawBusList();
             })
             .catch(error => console.error(error));
     };
 
     const drawBusList = function () {
-        const buses = schedule['schedules'];
+        const buses = scheduleData['schedules'];
         for (let i=0; i < buses.length; i++) {
             const bus = document.createElement('div');
             const number = document.createElement('div');
@@ -58,6 +58,31 @@ const Schedule = function () {
         document.getElementById(bus).classList.add('selected');
         selectedBus = bus;
         schedule_header.textContent = 'Маршрут ' + selectedBus;
+        const schedule = scheduleData['schedules'].find(item => item['bus'] === bus);
+        drawTimetable(schedule['timetable1'], 1);
+        drawTimetable(schedule['timetable2'], 2);
+        drawTimetable(schedule['timetable3'], 3);
+    };
+
+    const drawTimetable = function (timetable, card) {
+        document.getElementById('timetable_card'+card).style.display = timetable ? 'block' : 'none';
+        if (!timetable) return;
+        document.getElementById('timetable_header'+card).textContent = timetable['from'];
+        const table = document.getElementById('timetable'+card);
+        while (table.tBodies[0].firstChild) table.tBodies[0].removeChild(table.tBodies[0].firstChild);  // очищаем таблицу
+        let tr, td;
+        for (let i=0; i < timetable['timetable'].length; i++) {
+            const item = timetable['timetable'][i];
+            const number = item['number'];
+            tr = table.tBodies[0].rows[number-1] || table.tBodies[0].insertRow();
+            if (!tr.cells.length) {
+                td = tr.insertCell();
+                td.classList.add('timetable-number');
+                td.append(parseInt(number).toString());
+            }
+            td = tr.insertCell();
+            td.append(item.time);
+        }
     };
 
     init();
