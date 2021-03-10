@@ -8,7 +8,8 @@ const Schedule = function () {
     let scheduleData = null,
         selectedBus = null;
     const busList = document.getElementById('bus_list'),
-        schedule_header = document.getElementById('schedule_header');
+        schedule_header = document.getElementById('schedule_header'),
+        disclaimer = document.getElementById('disclaimer');
 
     const init = function () {
         loadData();
@@ -58,6 +59,7 @@ const Schedule = function () {
         document.getElementById(bus).classList.add('selected');
         selectedBus = bus;
         schedule_header.textContent = 'Маршрут ' + selectedBus;
+        disclaimer.style.display = 'none';
         const schedule = scheduleData['schedules'].find(item => item['bus'] === bus);
         drawTimetable(schedule['timetable1'], 1);
         drawTimetable(schedule['timetable2'], 2);
