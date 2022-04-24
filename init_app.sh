@@ -10,7 +10,7 @@
 # Description:       starts bus_pidgorodne app for site bus_pidgorodne_dp_ua using relx release
 ### END INIT INFO
 
-PROJECT_DIR=/opt/bus_pidgorodne
+PROJECT_DIR=/srv/bus_pidgorodne
 
 NAME=bus_pidgorodne
 DESC=bus_pidgorodne
