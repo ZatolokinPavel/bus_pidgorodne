@@ -1,28 +1,30 @@
-{
-    "schedules": [
-        {
-            "bus": "235",
-            "from": "Межевая",
-            "via": "АС левый берег",
-            "to": "Центр",
-            "fare": ""
-        },
-        {
-            "bus": "236",
-            "from": "Подгородное",
-            "via": "АС левый берег",
-            "to": "пл. Старомостова",
-            "fare": ""
-        },
-        {
-            "bus": "242",
-            "from": "Дачи",
-            "via": "АС левый берег",
-            "to": "Автовокзал",
-            "fare": "12 грн",
-            "timetable1": {
+[
+    {
+        "bus": "235",
+        "from": "Межевая",
+        "via": "АС левый берег",
+        "to": "Центр",
+        "fare": "",
+        "routes": []
+    },
+    {
+        "bus": "236",
+        "from": "Подгородное",
+        "via": "АС левый берег",
+        "to": "пл. Старомостова",
+        "fare": "",
+        "routes": []
+    },
+    {
+        "bus": "242",
+        "from": "Дачи",
+        "via": "АС левый берег",
+        "to": "Автовокзал",
+        "fare": "12 грн",
+        "routes": [
+            {
                 "from": "От Подгородного (дачи)",
-                "timetable": [
+                "weekday": [
                     {"time": "05:20", "number": "01", "flight": "1"},
                     {"time": "05:50", "number": "02", "flight": "1"},
                     {"time": "06:05", "number": "03", "flight": "1"},
@@ -66,11 +68,42 @@
                     {"time": "18:50", "number": "05", "flight": "5"},
                     {"time": "19:10", "number": "06", "flight": "5"},
                     {"time": "20:00", "number": "09", "flight": "5"}
+                ],
+                "weekend": [
+                    {"time": "06:00", "number": "01", "flight": "1"},
+                    {"time": "06:20", "number": "02", "flight": "1"},
+                    {"time": "07:00", "number": "03", "flight": "1"},
+                    {"time": "07:20", "number": "04", "flight": "1"},
+                    {"time": "08:00", "number": "05", "flight": "1"},
+                    {"time": "08:20", "number": "06", "flight": "1"},
+                    {"time": "09:00", "number": "01", "flight": "2"},
+                    {"time": "09:20", "number": "02", "flight": "2"},
+                    {"time": "10:00", "number": "03", "flight": "2"},
+                    {"time": "10:20", "number": "04", "flight": "2"},
+                    {"time": "11:00", "number": "05", "flight": "2"},
+                    {"time": "11:20", "number": "06", "flight": "2"},
+                    {"time": "12:00", "number": "01", "flight": "3"},
+                    {"time": "12:20", "number": "02", "flight": "3"},
+                    {"time": "13:00", "number": "03", "flight": "3"},
+                    {"time": "13:20", "number": "04", "flight": "3"},
+                    {"time": "14:00", "number": "05", "flight": "3"},
+                    {"time": "14:20", "number": "06", "flight": "3"},
+                    {"time": "15:00", "number": "01", "flight": "4"},
+                    {"time": "15:20", "number": "02", "flight": "4"},
+                    {"time": "16:00", "number": "03", "flight": "4"},
+                    {"time": "16:20", "number": "04", "flight": "4"},
+                    {"time": "17:00", "number": "05", "flight": "4"},
+                    {"time": "17:20", "number": "06", "flight": "4"},
+                    {"time": "18:00", "number": "01", "flight": "5"},
+                    {"time": "18:20", "number": "02", "flight": "5"},
+                    {"time": "19:00", "number": "03", "flight": "5"},
+                    {"time": "19:20", "number": "04", "flight": "5"},
+                    {"time": "20:00", "number": "05", "flight": "5"}
                 ]
             },
-            "timetable2": {
+            {
                 "from": "От автовокзала центрального",
-                "timetable": [
+                "weekday": [
                     {"time": "06:30", "number": "01", "flight": "1"},
                     {"time": "06:45", "number": "02", "flight": "1"},
                     {"time": "07:00", "number": "03", "flight": "1"},
@@ -114,8 +147,40 @@
                     {"time": "19:45", "number": "05", "flight": "5"},
                     {"time": "20:00", "number": "06", "flight": "5"},
                     {"time": "20:30", "number": "07", "flight": "5"}
+                ],
+                "weekend": [
+                    {"time": "06:30", "number": "01", "flight": "1"},
+                    {"time": "06:50", "number": "02", "flight": "1"},
+                    {"time": "07:30", "number": "03", "flight": "1"},
+                    {"time": "07:50", "number": "04", "flight": "1"},
+                    {"time": "08:30", "number": "05", "flight": "1"},
+                    {"time": "08:50", "number": "06", "flight": "1"},
+                    {"time": "09:30", "number": "01", "flight": "2"},
+                    {"time": "09:50", "number": "02", "flight": "2"},
+                    {"time": "10:30", "number": "03", "flight": "2"},
+                    {"time": "10:50", "number": "04", "flight": "2"},
+                    {"time": "11:30", "number": "05", "flight": "2"},
+                    {"time": "11:50", "number": "06", "flight": "2"},
+                    {"time": "12:30", "number": "01", "flight": "3"},
+                    {"time": "12:50", "number": "02", "flight": "3"},
+                    {"time": "13:30", "number": "03", "flight": "3"},
+                    {"time": "13:50", "number": "04", "flight": "3"},
+                    {"time": "14:30", "number": "05", "flight": "3"},
+                    {"time": "14:50", "number": "06", "flight": "3"},
+                    {"time": "15:30", "number": "01", "flight": "4"},
+                    {"time": "15:50", "number": "02", "flight": "4"},
+                    {"time": "16:30", "number": "03", "flight": "4"},
+                    {"time": "16:50", "number": "04", "flight": "4"},
+                    {"time": "17:30", "number": "05", "flight": "4"},
+                    {"time": "17:50", "number": "06", "flight": "4"},
+                    {"time": "18:30", "number": "01", "flight": "5"},
+                    {"time": "18:50", "number": "02", "flight": "5"},
+                    {"time": "19:30", "number": "03", "flight": "5"},
+                    {"time": "19:50", "number": "04", "flight": "5"},
+                    {"time": "20:30", "number": "05", "flight": "5"},
+                    {"time": "20:50", "number": "06", "flight": "5"}
                 ]
             }
-        }
-    ]
-}
+        ]
+    }
+]

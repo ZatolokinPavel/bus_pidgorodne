@@ -19,7 +19,7 @@ cowboy_dispatch() -> [
         {"/img/[...]",              cowboy_static,      {priv_dir,  bus_pidgorodne, "static/img"}},
         {"/css/index.css",          cowboy_static,      {priv_file, bus_pidgorodne, "static/css/index.css"}},
         {"/js/[...]",               cowboy_static,      {priv_dir,  bus_pidgorodne, "static/js"}},
-        {"/schedule",               cowboy_static,      {priv_file, bus_pidgorodne, "static/schedule.json"}},
+        {"/passenger/schedule",     passenger_handler,  no_state},
         {"/dispatcher",             cowboy_static,      {priv_file, bus_pidgorodne, "static/dispatcher.html"}},
         {"/dispatcher/api",         dispatcher_handler, no_state},
         {'_',                       cowboy_static,      {priv_file, bus_pidgorodne, "static/404.html"}}

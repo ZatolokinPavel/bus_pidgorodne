@@ -6,7 +6,8 @@
 const Schedule = function () {
 
     let scheduleData = null,
-        selectedBus = null;
+        selectedBus = null,
+        isWeekend = null;
     const busList = document.getElementById('bus_list'),
         schedule_header = document.getElementById('schedule_header'),
         disclaimer = document.getElementById('disclaimer');
@@ -16,12 +17,13 @@ const Schedule = function () {
     };
 
     const loadData = function () {
-        fetch('/schedule', {method: 'GET'})
+        fetch('/passenger/schedule', {method: 'GET'})
             .then(resp => resp.ok ? Promise.resolve(resp) : Promise.reject(resp.status+' '+resp.statusText))
             .then(response => response.json())
             .then(json => !json.error ? Promise.resolve(json) : Promise.reject(json.reason))
             .then(json => {
                 scheduleData = json;
+                isWeekend = json['isWeekend'];
                 drawBusList();
             })
             .catch(error => console.error(error));
@@ -58,25 +60,28 @@ const Schedule = function () {
         document.getElementById(selectedBus)?.classList.remove('selected');
         document.getElementById(bus).classList.add('selected');
         selectedBus = bus;
-        schedule_header.textContent = 'Маршрут ' + selectedBus;
+        const dayType = isWeekend ? 'выходной' : 'будний';
+        schedule_header.textContent = `Маршрут ${selectedBus} (${dayType} день)`;
         disclaimer.style.display = 'none';
         const schedule = scheduleData['schedules'].find(item => item['bus'] === bus);
-        drawTimetable(schedule['timetable1'], 1);
-        drawTimetable(schedule['timetable2'], 2);
-        highlightNearest(schedule['timetable1'], 1);
-        highlightNearest(schedule['timetable2'], 2);
+        drawTimetable(schedule, 1);
+        drawTimetable(schedule, 2);
+        highlightNearest(schedule, 1);
+        highlightNearest(schedule, 2);
     };
 
-    const drawTimetable = function (timetable, card) {
-        document.getElementById(`timetable_card${card}`).style.display = timetable ? 'block' : 'none';
-        if (!timetable) return;
-        document.getElementById(`timetable_header${card}`).textContent = timetable['from'];
+    const drawTimetable = function (schedule, card) {
+        const route = schedule['routes'][card-1];
+        document.getElementById(`timetable_card${card}`).style.display = !!route ? 'block' : 'none';
+        if (!route) return;
+        document.getElementById(`timetable_header${card}`).textContent = route['from'];
         const table = document.getElementById(`timetable${card}`);
         while (table.tBodies[0].firstChild) table.tBodies[0].removeChild(table.tBodies[0].firstChild);  // очищаем таблицу
+        const timetable = isWeekend && route['weekend']?.length ? route['weekend'] : route['weekday'];
         let tr, td;
-        for (let i=0; i < timetable['timetable'].length; i++) {
-            const number = timetable['timetable'][i]['number'];
-            const flight = timetable['timetable'][i]['flight'];
+        for (let i=0; i < timetable.length; i++) {
+            const number = timetable[i]['number'];
+            const flight = timetable[i]['flight'];
             if (!table.tHead.rows[0].cells[flight]) {
                 const th = document.createElement('th')
                 th.append(flight);
@@ -90,22 +95,24 @@ const Schedule = function () {
                 td.append(number);
             }
             td = tr.insertCell();
-            td.append(timetable['timetable'][i].time);
+            td.append(timetable[i].time);
         }
     };
 
-    const highlightNearest = function (timetable, card) {
-        if (!timetable) return;
+    const highlightNearest = function (schedule, card) {
+        const route = schedule['routes'][card-1];
+        if (!route) return;
         const table = document.getElementById(`timetable${card}`);
+        const timetable = isWeekend && route['weekend']?.length ? route['weekend'] : route['weekday'];
         const now = new Date();
         const bus = new Date();
         let number, flight;
-        for (let i=0; i < timetable['timetable'].length; i++) {
-            const timeArr = timetable['timetable'][i].time.split(':');
+        for (let i=0; i < timetable.length; i++) {
+            const timeArr = timetable[i].time.split(':');
             bus.setHours(parseInt(timeArr[0]), parseInt(timeArr[1])+2, 0, 0);
             if (bus > now) {
-                number = timetable['timetable'][i]['number'];
-                flight = timetable['timetable'][i]['flight'];
+                number = timetable[i]['number'];
+                flight = timetable[i]['flight'];
                 break;
             }
         }
