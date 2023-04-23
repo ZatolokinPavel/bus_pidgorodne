@@ -63,14 +63,15 @@ const Schedule = function () {
         const schedule = scheduleData['schedules'].find(item => item['bus'] === bus);
         drawTimetable(schedule['timetable1'], 1);
         drawTimetable(schedule['timetable2'], 2);
-        drawTimetable(schedule['timetable3'], 3);
+        highlightNearest(schedule['timetable1'], 1);
+        highlightNearest(schedule['timetable2'], 2);
     };
 
     const drawTimetable = function (timetable, card) {
-        document.getElementById('timetable_card'+card).style.display = timetable ? 'block' : 'none';
+        document.getElementById(`timetable_card${card}`).style.display = timetable ? 'block' : 'none';
         if (!timetable) return;
-        document.getElementById('timetable_header'+card).textContent = timetable['from'];
-        const table = document.getElementById('timetable'+card);
+        document.getElementById(`timetable_header${card}`).textContent = timetable['from'];
+        const table = document.getElementById(`timetable${card}`);
         while (table.tBodies[0].firstChild) table.tBodies[0].removeChild(table.tBodies[0].firstChild);  // очищаем таблицу
         let tr, td;
         for (let i=0; i < timetable['timetable'].length; i++) {
@@ -83,12 +84,33 @@ const Schedule = function () {
             }
             tr = table.tBodies[0].rows[number-1] || table.tBodies[0].insertRow();
             if (!tr.cells.length) {
+                tr.dataset.number = number;
                 td = tr.insertCell();
                 td.classList.add('timetable-number');
-                td.append(parseInt(number).toString());
+                td.append(number);
             }
             td = tr.insertCell();
             td.append(timetable['timetable'][i].time);
+        }
+    };
+
+    const highlightNearest = function (timetable, card) {
+        if (!timetable) return;
+        const table = document.getElementById(`timetable${card}`);
+        const now = new Date();
+        const bus = new Date();
+        let number, flight;
+        for (let i=0; i < timetable['timetable'].length; i++) {
+            const timeArr = timetable['timetable'][i].time.split(':');
+            bus.setHours(parseInt(timeArr[0]), parseInt(timeArr[1])+2, 0, 0);
+            if (bus > now) {
+                number = timetable['timetable'][i]['number'];
+                flight = timetable['timetable'][i]['flight'];
+                break;
+            }
+        }
+        if (number && flight) {
+            table.tBodies[0].rows[number - 1].cells[flight].classList.add('nearest');
         }
     };
 
