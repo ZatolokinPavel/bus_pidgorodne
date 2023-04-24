@@ -1,6 +1,23 @@
 @import (reference) "theme";
 
+.dispatcher-day-selector {
+    display: flex; margin: @gutter*2 0;
+    & > div {
+        margin-left: @gutter; padding: @gutter*2; background: @bc-foreground; border-radius: @gutter*0.5; cursor: pointer; border: 1px solid transparent;
+        &:hover {background: @bc-action-hover;}
+        &:active {background: @bc-action-active;}
+        &.selected {background: @bc-action; border: 1px solid @tc-secondary; cursor: default;}
+        .day-name {font-size: @ts-large;}
+        .day-type {text-align: center; font-size: @ts-small; line-height: @tl-small; color: @tc-secondary;}
+    }
+}
+
 .dispatcher {
-    margin: @gutter*3 0; padding: @gutter*2; background: @bc-background;
+    margin: @gutter*2 0; padding: @gutter*2; background: @bc-background;
     &-header {color: @tc-secondary; font-size: @ts-large; line-height: @tl-large;}
+    &-bus-list {display: flex; margin: @gutter*3 0; gap: @gutter*2;}
+    .bus-item {display: flex; flex-direction: column; align-items: center;}
+    .route {font-size: @ts-x-large; margin-bottom: @gutter*2;}
+    .cars-title {opacity: 0.5; font-size: @ts-x-small;}
+    .car-button {margin: @gutter 0; padding: @gutter @gutter*2; background: @bc-foreground; border-radius: @gutter*0.5; cursor: pointer;}
 }

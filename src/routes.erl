@@ -12,15 +12,15 @@
 
 cowboy_dispatch() -> [
     {'_', [
-        {"/",                       cowboy_static,      {priv_file, bus_pidgorodne, "static/index.html"}},
+        {"/",                       cowboy_static,      {priv_file, bus_pidgorodne, "static/passenger.html"}},
         {"/favicon.ico",            cowboy_static,      {priv_file, bus_pidgorodne, "static/img/favicon.ico"}},
         {"/service-worker.js",      cowboy_static,      {priv_file, bus_pidgorodne, "static/js/service-worker.js"}},
         {"/pwa/[...]",              cowboy_static,      {priv_dir,  bus_pidgorodne, "static/pwa"}},
         {"/img/[...]",              cowboy_static,      {priv_dir,  bus_pidgorodne, "static/img"}},
         {"/css/index.css",          cowboy_static,      {priv_file, bus_pidgorodne, "static/css/index.css"}},
         {"/js/[...]",               cowboy_static,      {priv_dir,  bus_pidgorodne, "static/js"}},
-        {"/passenger/schedule",     passenger_handler,  no_state},
+        {"/passenger/schedule",     http_handler,       no_state},
         {"/dispatcher",             cowboy_static,      {priv_file, bus_pidgorodne, "static/dispatcher.html"}},
-        {"/dispatcher/api",         dispatcher_handler, no_state},
+        {"/dispatcher/schedule",    http_handler,       no_state},
         {'_',                       cowboy_static,      {priv_file, bus_pidgorodne, "static/404.html"}}
     ]} ].

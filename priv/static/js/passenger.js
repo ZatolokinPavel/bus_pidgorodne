@@ -6,11 +6,11 @@
 const Schedule = function () {
 
     let scheduleData = null,
-        selectedBus = null,
+        selectedRoute = null,
         isWeekend = null;
-    const busList = document.getElementById('bus_list'),
-        schedule_header = document.getElementById('schedule_header'),
-        disclaimer = document.getElementById('disclaimer');
+    const busList = document.getElementById('bus_list');
+    const schedule_header = document.getElementById('schedule_header');
+    const disclaimer = document.getElementById('disclaimer');
 
     const init = function () {
         loadData();
@@ -23,7 +23,7 @@ const Schedule = function () {
             .then(json => !json.error ? Promise.resolve(json) : Promise.reject(json.reason))
             .then(json => {
                 scheduleData = json;
-                isWeekend = json['isWeekend'];
+                isWeekend = json['isWeekendToday'];
                 drawBusList();
             })
             .catch(error => console.error(error));
@@ -33,37 +33,37 @@ const Schedule = function () {
         const buses = scheduleData['schedules'];
         for (let i=0; i < buses.length; i++) {
             const bus = document.createElement('div');
-            const number = document.createElement('div');
+            const route = document.createElement('div');
             const stations = document.createElement('div');
             const from = document.createElement('div');
             const via = document.createElement('div');
             const to = document.createElement('div');
-            bus.id = buses[i]['bus'];
-            bus.onclick = () => selectBus(buses[i]['bus']);
-            number.className = 'bus-number';
+            bus.id = buses[i]['route'];
+            bus.onclick = () => selectBus(buses[i]['route']);
+            route.className = 'bus-route';
             stations.className = 'bus-stations';
             from.className = 'bus-from';
             via.className = 'bus-via';
             to.className = 'bus-to';
             bus.className = 'bus';
-            number.append(buses[i]['bus']);
+            route.append(buses[i]['route']);
             from.append(buses[i]['from']);
             via.append(buses[i]['via']);
             to.append(buses[i]['to']);
             stations.append(from, via, to);
-            bus.append(number, stations);
+            bus.append(route, stations);
             busList.append(bus);
         }
     };
 
-    const selectBus = function (bus) {
-        document.getElementById(selectedBus)?.classList.remove('selected');
-        document.getElementById(bus).classList.add('selected');
-        selectedBus = bus;
+    const selectBus = function (route) {
+        document.getElementById(selectedRoute)?.classList.remove('selected');
+        document.getElementById(route).classList.add('selected');
+        selectedRoute = route;
         const dayType = isWeekend ? 'выходной' : 'будний';
-        schedule_header.textContent = `Маршрут ${selectedBus} (${dayType} день)`;
+        schedule_header.textContent = `Маршрут ${selectedRoute} (${dayType} день)`;
         disclaimer.style.display = 'none';
-        const schedule = scheduleData['schedules'].find(item => item['bus'] === bus);
+        const schedule = scheduleData['schedules'].find(item => item['route'] === route);
         drawTimetable(schedule, 1);
         drawTimetable(schedule, 2);
         highlightNearest(schedule, 1);
@@ -71,7 +71,7 @@ const Schedule = function () {
     };
 
     const drawTimetable = function (schedule, card) {
-        const route = schedule['routes'][card-1];
+        const route = schedule['directions'][card-1];
         document.getElementById(`timetable_card${card}`).style.display = !!route ? 'block' : 'none';
         if (!route) return;
         document.getElementById(`timetable_header${card}`).textContent = route['from'];
@@ -100,7 +100,7 @@ const Schedule = function () {
     };
 
     const highlightNearest = function (schedule, card) {
-        const route = schedule['routes'][card-1];
+        const route = schedule['directions'][card-1];
         if (!route) return;
         const table = document.getElementById(`timetable${card}`);
         const timetable = isWeekend && route['weekend']?.length ? route['weekend'] : route['weekday'];
