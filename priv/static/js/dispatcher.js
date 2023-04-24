@@ -4,18 +4,14 @@
  */
 
 const Dispatcher = function () {
-    const self = this;
     let scheduleData = null;
     let isWeekendToday = null;
     let isWeekendTomorrow = null;
-    let selectedTomorrow = false;
-    const busList = document.getElementById('bus_list');
-    const selectorToday = document.getElementById('selector_today');
-    const selectorTomorrow = document.getElementById('selector_tomorrow');
+    const busListToday = document.getElementById('bus_list_today');
+    const busListTomorrow = document.getElementById('bus_list_tomorrow');
 
     const init = function () {
         loadData();
-        self.selectTomorrow(selectedTomorrow);
     };
 
     const loadData = function () {
@@ -26,36 +22,32 @@ const Dispatcher = function () {
             .then(json => {
                 scheduleData = json;
                 isWeekendToday = json['isWeekendToday'];
-                setDayTypes();
-                drawDispatcherTable();
+                drawDispatcherTable(true);
+                drawDispatcherTable(false);
             })
             .catch(error => console.error(error));
     };
 
-    const setDayTypes = function () {
-        document.getElementById('today_type').append(isWeekendToday ? 'выходной' : 'будний');
-        document.getElementById('tomorrow_type').append(isWeekendTomorrow ? 'выходной' : 'будний');
-    }
-
-    const drawDispatcherTable = function () {
+    const drawDispatcherTable = function (isToday) {
         const buses = scheduleData['schedules'];
         buses.forEach(bus => {
             const busItem = document.createElement('div');
             const route = document.createElement('div');
             const title = document.createElement('div');
-            const cars = drawCars(scheduleData['cars'][bus['route']]);
+            const cars = drawCars(scheduleData['cars'][bus['route']], isToday);
             busItem.className = 'bus-item'
             route.className = 'route';
             title.className = 'cars-title';
             route.append(bus['route']);
             title.append('графики')
             busItem.append(route, title, cars);
-            busList.append(busItem);
+            isToday ? busListToday.append(busItem) : busListTomorrow.append(busItem);
         });
     };
 
-    const drawCars = function (cars) {
-        const carsForDay = isWeekendToday && cars['weekend'] ? cars['weekend'] : cars['weekday'];
+    const drawCars = function (cars, isToday) {
+        const isWeekend = isToday ? isWeekendToday : isWeekendTomorrow;
+        const carsForDay = isWeekend && cars['weekend'] ? cars['weekend'] : cars['weekday'];
         if (!carsForDay) return '';
         const div = document.createElement('div');
         carsForDay.forEach(car => {
@@ -66,12 +58,6 @@ const Dispatcher = function () {
         })
         return div;
     };
-
-    this.selectTomorrow = function (isTomorrow) {
-        selectedTomorrow = !!isTomorrow;
-        selectorToday.classList.toggle('selected', !selectedTomorrow);
-        selectorTomorrow.classList.toggle('selected', selectedTomorrow);
-    }
 
     init();
 };

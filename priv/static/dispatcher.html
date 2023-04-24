@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Маршрутки Подгородного</title>
-    <link rel="stylesheet" href="/css/index.css" type="text/css">
+    <link rel="stylesheet" href="/css/index.css?v=20230424" type="text/css">
 </head>
 <body>
 
@@ -14,21 +14,21 @@
 </header>
 
 <main>
-    <div class="dispatcher-day-selector">
-        <div id="selector_today" onclick="dispatcher.selectTomorrow(false);">
-            <div class="day-name">Сегодня</div>
-            <div id="today_type" class="day-type"></div>
-        </div>
-        <div id="selector_tomorrow" onclick="dispatcher.selectTomorrow(true);">
-            <div class="day-name">Завтра</div>
-            <div id="tomorrow_type" class="day-type"></div>
-
-        </div>
-    </div>
     <div class="dispatcher">
         <div class="dispatcher-header">Страница диспетчера</div>
 
-        <div id="bus_list" class="dispatcher-bus-list"></div>
+        <div class="days-wrapper">
+            <div class="days-container">
+                <div class="one-day">
+                    <div class="day-name today">Сегодня</div>
+                    <div id="bus_list_today" class="dispatcher-bus-list"></div>
+                </div>
+                <div class="one-day">
+                    <div id="bus_list_tomorrow" class="dispatcher-bus-list"></div>
+                    <div class="day-name">Завтра</div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
@@ -38,7 +38,8 @@
     </a>
 </footer>
 
-<script src="/js/dispatcher.js"></script>
+<script src="/js/dispatcher.js?v=20230424"></script>
+<script src="/js/scroll_days.js"></script>
 
 </body>
 </html>
