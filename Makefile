@@ -1,20 +1,21 @@
 RELEASE_NAME = bus_pidgorodne
-PROFILE = default
 
 all: console
 console:
-	./rebar3 as default release
-	./_build/default/rel/$(RELEASE_NAME)/bin/$(RELEASE_NAME) console
+	./rebar3 unlock
+	./rebar3 as dev release
+	./_build/dev/rel/$(RELEASE_NAME)/bin/$(RELEASE_NAME) console
 
 release: rel
 rel:
-	./rebar3 as default release
+	./rebar3 unlock
+	./rebar3 as prod release
 
 start:
-	./_build/$(PROFILE)/rel/$(RELEASE_NAME)/bin/$(RELEASE_NAME) start
+	./_build/prod/rel/$(RELEASE_NAME)/bin/$(RELEASE_NAME) start
 
 stop:
-	./_build/$(PROFILE)/rel/$(RELEASE_NAME)/bin/$(RELEASE_NAME) stop
+	./_build/prod/rel/$(RELEASE_NAME)/bin/$(RELEASE_NAME) stop
 
 attach:
-	./_build/$(PROFILE)/rel/$(RELEASE_NAME)/bin/$(RELEASE_NAME) attach
+	./_build/prod/rel/$(RELEASE_NAME)/bin/$(RELEASE_NAME) attach
