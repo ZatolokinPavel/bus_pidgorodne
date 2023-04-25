@@ -51,7 +51,7 @@ const Dispatcher = function () {
         if (!carsForDay) return '';
         const div = document.createElement('div');
         carsForDay.forEach(car => {
-            const button = document.createElement('div');
+            const button = document.createElement('button');
             button.className = 'car-button';
             button.append(car);
             div.append(button);
