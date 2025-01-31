@@ -33,7 +33,7 @@ case "$1" in
     release)
         cd ${PROJECT_DIR} && make stop
         cd ${PROJECT_DIR} && git pull
-        cd ${PROJECT_DIR} && make rel
+        cd ${PROJECT_DIR} && make release
         cd ${PROJECT_DIR} && make start
         nginx -s reload
         ;;
