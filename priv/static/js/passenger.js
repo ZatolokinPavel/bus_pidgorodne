@@ -76,6 +76,7 @@ const Schedule = function () {
         if (!route) return;
         document.getElementById(`timetable_header${card}`).textContent = route['from'];
         const table = document.getElementById(`timetable${card}`);
+        while (table.tHead.rows[0].cells.length > 1) table.tHead.rows[0].removeChild(table.tHead.rows[0].lastChild); // очищаем заголовок таблицы
         while (table.tBodies[0].firstChild) table.tBodies[0].removeChild(table.tBodies[0].firstChild);  // очищаем таблицу
         const timetable = isWeekend && route['weekend']?.length ? route['weekend'] : route['weekday'];
         const numbers = timetable
