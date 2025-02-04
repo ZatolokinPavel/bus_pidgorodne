@@ -78,7 +78,18 @@ const Schedule = function () {
         const table = document.getElementById(`timetable${card}`);
         while (table.tBodies[0].firstChild) table.tBodies[0].removeChild(table.tBodies[0].firstChild);  // очищаем таблицу
         const timetable = isWeekend && route['weekend']?.length ? route['weekend'] : route['weekday'];
+        const numbers = timetable
+            .map(item => item.number)
+            .filter((value, index, self) => self.indexOf(value) === index)
+            .sort((a,b) => a - b);
         let tr, td;
+        numbers.forEach(number => {
+            tr = table.tBodies[0].insertRow();
+            tr.dataset.number = number;
+            td = tr.insertCell();
+            td.classList.add('timetable-number');
+            td.append(number);
+        });
         for (let i=0; i < timetable.length; i++) {
             const number = timetable[i]['number'];
             const flight = timetable[i]['flight'];
@@ -87,13 +98,8 @@ const Schedule = function () {
                 th.append(flight);
                 table.tHead.rows[0].append(th);
             }
-            tr = table.tBodies[0].rows[number-1] || table.tBodies[0].insertRow();
-            if (!tr.cells.length) {
-                tr.dataset.number = number;
-                td = tr.insertCell();
-                td.classList.add('timetable-number');
-                td.append(number);
-            }
+            tr = table.tBodies[0].rows[number-1];
+            while (tr.cells.length < parseInt(flight)) tr.insertCell();
             td = tr.insertCell();
             td.append(timetable[i].time);
         }
