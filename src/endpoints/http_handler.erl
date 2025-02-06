@@ -8,43 +8,40 @@
 -module(http_handler).
 -behaviour(cowboy_handler).
 -author("Zatolokin Pavel").
+-include("wu.hrl").
 
 %% API
 -export([init/2, terminate/3]).
 
 init(Req, State) ->
-    Body = schedule(),
-    Req1 = cowboy_req:set_resp_header(<<"Content-Type">>, <<"application/json">>, Req),
-    Req2 = cowboy_req:set_resp_body(Body, Req1),
-    Req3 = cowboy_req:reply(200, Req2),
-    {ok, Req3, State}.
+    Path = binary_to_list(cowboy_req:path(Req)),
+    Method = case cowboy_req:method(Req) of
+                 <<"GET">> -> get;
+                 <<"POST">> -> post end,
+    QueryString = cowboy_req:parse_qs(Req),
+    Result = routes:page(Req, Method, QueryString, Path),
+    {Code,Resp,Req1} = parse_result(Result, Req),
+    Body = render_answer(Resp),
+    Req2 = set_headers(Resp, Req1),
+    Req3 = cowboy_req:set_resp_body(Body, Req2),
+    Req4 = cowboy_req:reply(Code, Req3),
+    {ok, Req4, State}.
 
 terminate(_Reason, _Req, _State) -> ok.
 
 
-schedule() ->
-    {ok,ScheduleBin} = file:read_file(code:priv_dir(bus_pidgorodne)++"/schedule.json"),
-    Schedule = jsone:decode(ScheduleBin),
-    {Today,_} = calendar:local_time(),
-    JSON = {[
-        {schedules, Schedule},
-        {cars, cars(Schedule)},
-        {isWeekendToday, calendar:day_of_the_week(Today) > 5}
-    ]},
-    jsone:encode(JSON, []).
+parse_result({Code,Result,Req},_) when is_integer(Code) -> {Code, Result, Req};
+parse_result({Code,Result}, Req) when is_integer(Code) -> {Code, Result, Req};
+parse_result(Result, Req) when is_atom(Result) -> {204, "", Req};
+parse_result(Result, Req) -> {200, Result, Req}.
 
-cars(Schedule) ->
-    {[
-        {maps:get(<<"route">>,S), {[
-            {<<"weekday">>, cars_from_directions([maps:find(<<"weekday">>,R) || R <- maps:get(<<"directions">>,S)])},
-            {<<"weekend">>, cars_from_directions([maps:find(<<"weekend">>,R) || R <- maps:get(<<"directions">>,S)])}
-        ]}}
-        || S <- Schedule
-    ]}.
+render_answer(R) when is_list(R) -> R;
+render_answer(R) when is_binary(R) -> R;
+render_answer(R = #json{}) -> jsone:encode(R#json.value, R#json.options);
+render_answer(R = #dtl{}) ->
+    Mod = list_to_existing_atom(R#dtl.file ++ "_dtl"),
+    {ok,HTML} = Mod:render(R#dtl.variables, R#dtl.options),
+    HTML.
 
-cars_from_directions(Directions) ->
-    Numbers = [[maps:get(<<"number">>,Time) || Time <- Direction] || {ok,Direction} <- Directions],
-    case Numbers of
-        [] -> null;
-        [_|_] -> lists:usort(lists:flatten(Numbers))
-    end.
+set_headers(#json{}, Req) -> cowboy_req:set_resp_header(<<"Content-Type">>, <<"application/json">>, Req);
+set_headers(_Resp, Req) -> Req.

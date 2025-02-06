@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(routes).
 -author("Zatolokin Pavel").
--export([cowboy_dispatch/0]).
+-export([cowboy_dispatch/0, page/4]).
 
 cowboy_dispatch() -> [
     {'_', [
@@ -24,3 +24,5 @@ cowboy_dispatch() -> [
         {"/dispatcher/schedule",    http_handler,       no_state},
         {'_',                       cowboy_static,      {priv_file, bus_pidgorodne, "static/404.html"}}
     ]} ].
+
+page(_Req, get, [], "/passenger/schedule")  -> schedule:schedule().
