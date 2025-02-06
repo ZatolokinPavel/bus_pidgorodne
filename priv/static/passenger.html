@@ -16,7 +16,6 @@
 <main>
     <div id="bus_list" class="bus-list"></div>
     <div class="schedule">
-        <div id="schedule_header" class="schedule-header"></div>
         <div id="disclaimer" class="disclaimer">
             <p>
                 Это волонтёрский проект никак не связанный с перевозчиком.
@@ -31,6 +30,23 @@
                 Создатели данного сервиса не несут ответственности в случае любых неудобств или ущерба, причинённого
                 пассажирам в результате несоответствия расписания реальному времени отправления маршрутных такси.
             </p>
+        </div>
+        <div id="schedule_header" class="schedule-header"></div>
+        <div id="day_selector" class="day-selector" style="display: none;">
+            <div id="day_today" class="day selected" onclick="passengerSchedule.switchDay(this);">
+                <div>Сьогодні</div>
+                <div class="day-type"></div>
+            </div>
+            <div id="day_tomorrow" class="day" onclick="passengerSchedule.switchDay(this);">
+                <div>Завтра</div>
+                <div class="day-type"></div>
+            </div>
+            <div id="day_weekday" class="day day-type" data-type="weekday" onclick="passengerSchedule.switchDay(this);">
+                По буднях
+            </div>
+            <div id="day_weekend" class="day day-type" data-type="weekend" onclick="passengerSchedule.switchDay(this);">
+                На вихідних
+            </div>
         </div>
         <div id="timetable_card1" class="timetable-card">
             <div id="timetable_header1" class="timetable-header"></div>

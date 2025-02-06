@@ -17,10 +17,12 @@ schedule() ->
     {ok,ScheduleBin} = file:read_file(code:priv_dir(bus_pidgorodne)++"/schedule.json"),
     Schedule = jsone:decode(ScheduleBin),
     {Today,_} = calendar:local_time(),
+    Tomorrow = calendar:gregorian_days_to_date(calendar:date_to_gregorian_days(Today) + 1),
     JSON = {[
         {schedules, Schedule},
         {cars, cars(Schedule)},
-        {isWeekendToday, calendar:day_of_the_week(Today) > 5}
+        {isWeekendToday, calendar:day_of_the_week(Today) > 5},
+        {isWeekendTomorrow, calendar:day_of_the_week(Tomorrow) > 5}
     ]},
     #json{value = JSON}.
 

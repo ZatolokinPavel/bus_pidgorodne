@@ -5,12 +5,14 @@
 
 const Schedule = function () {
 
-    let scheduleData = null,
-        selectedRoute = null,
-        isWeekend = null;
+    let _scheduleData = null;
+    let _selectedRoute = null;
+    let _isWeekend = null;
+    let _isTodaySelected = true;
     const busList = document.getElementById('bus_list');
-    const schedule_header = document.getElementById('schedule_header');
     const disclaimer = document.getElementById('disclaimer');
+    const schedule_header = document.getElementById('schedule_header');
+    const day_selector = document.getElementById('day_selector');
 
     const init = function () {
         loadData();
@@ -22,15 +24,27 @@ const Schedule = function () {
             .then(response => response.json())
             .then(json => !json.error ? Promise.resolve(json) : Promise.reject(json.reason))
             .then(json => {
-                scheduleData = json;
-                isWeekend = json['isWeekendToday'];
+                _scheduleData = json;
+                _isWeekend = json['isWeekendToday'];
+                drawDaySelector(json['isWeekendToday'], json['isWeekendTomorrow']);
                 drawBusList();
             })
             .catch(error => console.error(error));
     };
 
+    const drawDaySelector = function (isWeekendToday, isWeekendTomorrow) {
+        const day_today = document.getElementById('day_today');
+        const day_tomorrow = document.getElementById('day_tomorrow');
+        day_today.dataset.type = isWeekendToday ? 'weekend' : 'weekday';
+        day_tomorrow.dataset.type = isWeekendTomorrow ? 'weekend' : 'weekday';
+        day_today.getElementsByClassName('day-type')[0].textContent = isWeekendToday ? 'вихідний' : 'будній';
+        day_tomorrow.getElementsByClassName('day-type')[0].textContent = isWeekendTomorrow ? 'вихідний' : 'будній';
+        document.getElementById('day_weekday').classList.toggle('hide', !isWeekendToday || !isWeekendTomorrow);
+        document.getElementById('day_weekend').classList.toggle('hide', isWeekendToday || isWeekendTomorrow);
+    };
+
     const drawBusList = function () {
-        const buses = scheduleData['schedules'];
+        const buses = _scheduleData['schedules'];
         for (let i=0; i < buses.length; i++) {
             const bus = document.createElement('div');
             const route = document.createElement('div');
@@ -57,20 +71,26 @@ const Schedule = function () {
     };
 
     const selectBus = function (route) {
-        document.getElementById(selectedRoute)?.classList.remove('selected');
+        document.getElementById(_selectedRoute)?.classList.remove('selected');
         document.getElementById(route).classList.add('selected');
-        selectedRoute = route;
-        const dayType = isWeekend ? 'выходной' : 'будний';
-        schedule_header.textContent = `Маршрут ${selectedRoute} (${dayType} день)`;
+        _selectedRoute = route;
         disclaimer.style.display = 'none';
-        const schedule = scheduleData['schedules'].find(item => item['route'] === route);
-        drawTimetable(schedule, 1);
-        drawTimetable(schedule, 2);
-        highlightNearest(schedule, 1);
-        highlightNearest(schedule, 2);
+        schedule_header.textContent = `Маршрут ${_selectedRoute}`;
+        day_selector.style.display = '';
+        drawTimetables();
     };
 
-    const drawTimetable = function (schedule, card) {
+    const drawTimetables = function () {
+        const schedule = _scheduleData['schedules'].find(item => item['route'] === _selectedRoute);
+        drawOneTimetable(schedule, 1);
+        drawOneTimetable(schedule, 2);
+        if (_isTodaySelected) {
+            highlightNearest(schedule, 1);
+            highlightNearest(schedule, 2);
+        }
+    };
+
+    const drawOneTimetable = function (schedule, card) {
         const route = schedule['directions'][card-1];
         document.getElementById(`timetable_card${card}`).style.display = !!route ? 'block' : 'none';
         if (!route) return;
@@ -78,7 +98,7 @@ const Schedule = function () {
         const table = document.getElementById(`timetable${card}`);
         while (table.tHead.rows[0].cells.length > 1) table.tHead.rows[0].removeChild(table.tHead.rows[0].lastChild); // очищаем заголовок таблицы
         while (table.tBodies[0].firstChild) table.tBodies[0].removeChild(table.tBodies[0].firstChild);  // очищаем таблицу
-        const timetable = isWeekend && route['weekend']?.length ? route['weekend'] : route['weekday'];
+        const timetable = _isWeekend && route['weekend']?.length ? route['weekend'] : route['weekday'];
         const numbers = timetable
             .map(item => item.number)
             .filter((value, index, self) => self.indexOf(value) === index)
@@ -110,7 +130,7 @@ const Schedule = function () {
         const route = schedule['directions'][card-1];
         if (!route) return;
         const table = document.getElementById(`timetable${card}`);
-        const timetable = isWeekend && route['weekend']?.length ? route['weekend'] : route['weekday'];
+        const timetable = _isWeekend && route['weekend']?.length ? route['weekend'] : route['weekday'];
         const now = new Date();
         const bus = new Date();
         let number, flight;
@@ -128,7 +148,18 @@ const Schedule = function () {
         }
     };
 
+    this.switchDay = function (day) {
+        if (day.classList.contains('selected')) return;
+        const buttons = day.parentElement.children;
+        for (let i=0; i < buttons.length; i++) {
+            buttons[i].classList.toggle('selected', buttons[i] === day);
+        }
+        _isWeekend = day.dataset.type === 'weekend';
+        _isTodaySelected = !day.previousElementSibling;
+        drawTimetables();
+    };
+
     init();
 };
 
-new Schedule();
+const passengerSchedule = new Schedule();
